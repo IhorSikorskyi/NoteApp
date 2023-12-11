@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="8.0.1" />
+    <PackageReference Include="Npgsql.Json.NET" Version="8.0.1" />
+    <PackageReference Include="Npgsql.NetTopologySuite" Version="8.0.1" />
+    <PackageReference Include="Npgsql.NodaTime" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UsersCheck\UsersCheck.csproj" />
+  </ItemGroup>
+
+</Project>
