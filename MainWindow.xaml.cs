@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.ObjectModel;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,22 +23,30 @@ public partial class MainWindow : Window
         _cache = cache;
     }
 
+    public ObservableCollection<Category> CategoriesForView { get; set; }
+
     public MainWindow()
     {
         InitializeComponent();
 
         _cache = (Cache)App.ServiceProvider.GetService(typeof(Cache));
 
-        DispatcherTimer timer = new DispatcherTimer();
+        DataContext = this;
+        LoadData();
+
+        var timer = new DispatcherTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
         timer.Tick += Timer_Tick;
         timer.Start();
 
         UpdateClock();
 
-        List<Category> data = _cache.GetDataFromDatabase();
+    }
 
-        dataGrid.ItemsSource = data;
+    private void LoadData()
+    {
+        _cache.CacheUserId();
+        CategoriesForView = new ObservableCollection<Category>(_cache.GetDataFromDatabase());
     }
 
     private void save_Click(object sender, RoutedEventArgs e)
@@ -60,6 +69,17 @@ public partial class MainWindow : Window
 
     }
 
+    private void clear_Click_1(object sender, RoutedEventArgs e)
+    {
+        txtTitle.Clear();
+        txtMessage.Clear();
+    }
+
+    private void toFind_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
     private void Timer_Tick(object sender, EventArgs e)
     {
         UpdateClock();
@@ -75,12 +95,6 @@ public partial class MainWindow : Window
 
     }
 
-    private void clear_Click_1(object sender, RoutedEventArgs e)
-    {
-        txtTitle.Clear();
-        txtMessage.Clear();
-    }
-
     private void LogOut_Click(object sender, RoutedEventArgs e)
     {
         _cache.DeleteCachedUserId();
@@ -89,74 +103,52 @@ public partial class MainWindow : Window
 
     private void CatCreate_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new Context())
+        using var context = new Context();
+        string categoryName = txtCategory1.Text;
+        int currentUserId = _cache.GetCachedUserId();
+
+        var category = context.Categories.FirstOrDefault(c => c.name != categoryName);
+
+        if (category != null)
         {
-            string categoryName = txtCategory1.Text;
-            int currentUserId = _cache.GetCachedUserId();
-
-            var category = context.Categories.FirstOrDefault(c => c.name != categoryName);
-
-            if (category == null)
+            var newCategory = new Category
             {
-                var user = context.Users.FirstOrDefault(u => u.user_id == currentUserId);
+                name = categoryName,
+                userid = currentUserId
+            };
 
-                if (user != null)
-                {
-                    var newCategory = new Category
-                    {
-                        name = categoryName,
-                        userid = user.user_id
-                    };
+            context.Categories.Add(newCategory);
+            context.SaveChanges();
 
-                    context.Categories.Add(newCategory);
-                    context.SaveChanges();
-
-                    txtCategory1.Clear();
-                }
-            }
-
+            txtCategory1.Clear();
         }
     }
 
     private void catUpdate_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new Context())
-        {
-            string categoryName = txtCategory1.Text;
-
-        }
+        using var context = new Context();
+        string categoryName = txtCategory1.Text;
     }
 
     private void catRead_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new Context())
-        {
-            var selectedCategory = dataGrid.SelectedItems as Category;
-
-            if (selectedCategory != null)
-            {
-                txtCategory1.Text = selectedCategory.name;
-            }
-        }
+        using var context = new Context();
     }
 
     private void catDelete_Click(object sender, RoutedEventArgs e)
     {
-        using (var context = new Context())
+        using var context = new Context();
+        string categoryName = txtCategory1.Text;
+        var categoryToDelete = context.Categories
+            .FirstOrDefault(c => c.categoryid == 12);
+        if (categoryToDelete != null && categoryName != null)
         {
-            string categoryName = txtCategory1.Text;
-            var selectedCategory = dataGrid.SelectedItems as Category;
-            var categoryToDelete = context.Categories
-                .FirstOrDefault(c => c.categoryid == selectedCategory.categoryid);
-            if (categoryToDelete != null && categoryName != null)
-            {
-                context.Categories.Remove(categoryToDelete);
-                context.SaveChanges();
-            }
-            else
-            {
-                MessageBox.Show("Такої категорії не існує!");
-            }
+            context.Categories.Remove(categoryToDelete);
+            context.SaveChanges();
+        }
+        else
+        {
+            MessageBox.Show("Такої категорії не існує!");
         }
     }
 }

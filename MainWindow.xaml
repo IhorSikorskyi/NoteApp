@@ -13,40 +13,45 @@
         <TabControl HorizontalAlignment="Center" Height="670" Margin="0,52,0,0" VerticalAlignment="Top" Width="1090">
             <TabItem x:Name="Notes" Header="Notes" Margin="-2,-2,-20,0" FontSize="18">
                 <Grid Background="#FFE5E5E5" Height="749">
-                    <Image Margin="0,0,0,120" Source="/BackGround.jpg" Stretch="Fill"/>
-                    <Image Margin="0,0,0,122" Source="/360_F_69424905_vxTpRGAcVKni9157VpKAOG6MpTX30etl.jpg" Stretch="Fill"/>
-                    <Label x:Name="title" Content="Title" HorizontalAlignment="Left" Margin="22,71,0,0" VerticalAlignment="Top" Height="31" Width="72" FontSize="16" RenderTransformOrigin="0.497,0.555" Background="White"/>
-                    <Label x:Name="message" Content="Message" HorizontalAlignment="Left" Margin="22,123,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
-                    <TextBox x:Name="txtTitle" TextWrapping="Wrap" Margin="101,71,527,647" FontSize="15"/>
-                    <TextBox x:Name="txtMessage" TextWrapping="Wrap" Margin="101,123,527,287" FontSize="15"/>
-                    <DataGrid x:Name="dataGrid1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="578,71,32,238" SelectionChanged="dataGrid1_SelectionChanged" FontSize="16"/>
-                    <Button x:Name="save" Content="Create" HorizontalAlignment="Left" Margin="101,541,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="save_Click"/>
-                    <Button x:Name="read" Content="Read" HorizontalAlignment="Left" Margin="478,541,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="read_Click"/>
-                    <Button x:Name="update" Content="Update" HorizontalAlignment="Left" Margin="578,541,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="update_Click"/>
-                    <Button x:Name="delete" Content="Delete" HorizontalAlignment="Left" Margin="973,541,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="delete_Click"/>
-                    <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="286,541,0,0" VerticalAlignment="Top" Height="31" Width="86" FontSize="16" Click="clear_Click_1"/>
-                    <Label x:Name="txtCategory" Content="Category" HorizontalAlignment="Left" Margin="22,480,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
-                    <TextBox x:Name="txtTitle_Copy" TextWrapping="Wrap" Margin="101,480,527,238" FontSize="15"/>
+                    <Image Margin="6,-72,-6,194" Source="/360_F_69424905_vxTpRGAcVKni9157VpKAOG6MpTX30etl.jpg" Stretch="Fill"/>
+                    <Label x:Name="title" Content="Title" HorizontalAlignment="Left" Margin="29,171,0,0" VerticalAlignment="Top" Height="31" Width="72" FontSize="16" RenderTransformOrigin="0.497,0.555" Background="White"/>
+                    <Label x:Name="message" Content="Message" HorizontalAlignment="Left" Margin="29,214,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
+                    <TextBox x:Name="txtTitle" TextWrapping="Wrap" Margin="108,171,520,547" FontSize="15"/>
+                    <TextBox x:Name="txtMessage" TextWrapping="Wrap" Margin="108,214,520,314" FontSize="15"/>
+                    <DataGrid x:Name="dataGrid1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="585,42,25,267" SelectionChanged="dataGrid1_SelectionChanged" FontSize="16"/>
+                    <Button x:Name="save" Content="Create" HorizontalAlignment="Left" Margin="108,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="save_Click"/>
+                    <Button x:Name="read" Content="Read" HorizontalAlignment="Left" Margin="485,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="read_Click"/>
+                    <Button x:Name="update" Content="Update" HorizontalAlignment="Left" Margin="585,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="update_Click"/>
+                    <Button x:Name="delete" Content="Delete" HorizontalAlignment="Left" Margin="980,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="delete_Click"/>
+                    <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="293,512,0,0" VerticalAlignment="Top" Height="31" Width="86" FontSize="16" Click="clear_Click_1"/>
+                    <Label x:Name="txtCategory" Content="Category" HorizontalAlignment="Left" Margin="29,451,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
+                    <TextBox x:Name="txtTitle_Copy" TextWrapping="Wrap" Margin="108,451,520,267" FontSize="15"/>
+                    <Label x:Name="title_toFind" Content="Input note's number:" HorizontalAlignment="Left" Margin="29,42,0,0" VerticalAlignment="Top" Height="31" Width="158" FontSize="16" RenderTransformOrigin="0.497,0.555" Background="White"/>
+                    <TextBox x:Name="txtTitle_Copy1" TextWrapping="Wrap" Margin="192,42,520,676" FontSize="15"/>
+                    <Button x:Name="toFind" Content="Find" HorizontalAlignment="Left" Height="32" Margin="104,90,0,0" VerticalAlignment="Top" Width="83" Click="toFind_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Categories" Header="Categories" Margin="20,-2,-19,0" FontSize="18">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="49*"/>
-                        <ColumnDefinition Width="1035*"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Image Source="/BackGround.jpg" Stretch="Fill" Grid.ColumnSpan="2"/>
-                    <Image Margin="0,0,0,7" Source="/360_F_69424905_vxTpRGAcVKni9157VpKAOG6MpTX30etl.jpg" Stretch="Fill" Grid.ColumnSpan="2"/>
-                    <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" SelectionChanged="catRead_Click" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="150,113,361,87" Grid.Column="1"/>
-                    <Label x:Name="categor" Content="Category name" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="146" Height="39" FontSize="20" Background="White" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="txtCategory1" HorizontalAlignment="Left" Margin="150,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="524" Grid.Column="1" Height="39"/>
-                    <Button x:Name="CatCreate" Content="Create" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="146" Height="36" Grid.ColumnSpan="2" Click="CatCreate_Click"/>
-                    <Button x:Name="catRead" Content="Read" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top" Height="36" Width="146" Grid.ColumnSpan="2" Click="catRead_Click"/>
-                    <Button x:Name="catUpdate" Content="Update" HorizontalAlignment="Left" Margin="10,167,0,0" VerticalAlignment="Top" Height="36" Width="146" Grid.ColumnSpan="2" Click="catUpdate_Click"/>
-                    <Button x:Name="catDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top" Height="36" Width="146" Grid.ColumnSpan="2" Click="catDelete_Click"/>
+                    <Image Margin="0,0,0,7" Source="/360_F_69424905_vxTpRGAcVKni9157VpKAOG6MpTX30etl.jpg" Stretch="Fill"/>
+                    <Label x:Name="categor" Content="Category name" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="146" Height="39" FontSize="20" Background="White"/>
+                    <TextBox x:Name="txtCategory1" HorizontalAlignment="Left" Margin="199,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="524" Height="39"/>
+                    <Button x:Name="CatCreate" Content="Create" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" Width="146" Height="36" Click="CatCreate_Click"/>
+                    <Button x:Name="catRead" Content="Read" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catRead_Click"/>
+                    <Button x:Name="catUpdate" Content="Update" HorizontalAlignment="Left" Margin="10,167,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catUpdate_Click"/>
+                    <Button x:Name="catDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catDelete_Click"/>
+                    <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="422" Margin="200,115,0,0" VerticalAlignment="Top" Width="523" ItemsSource="{Binding CategoriesForView}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding categoryid}" Width="50" />
+                            <DataGridTextColumn Header="Name" Binding="{Binding name}" Width ="470"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
                 </Grid>
             </TabItem>
         </TabControl>
-
     </Grid>
 </Window>

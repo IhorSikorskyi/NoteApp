@@ -1,48 +1,45 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
+using StockSharp.Messages;
 
 namespace NoteApp
 {
-    public class Cache
+    public class Cache(IMemoryCache cache)
     {
-        private readonly Context _dbContext;
-        private readonly IMemoryCache _cache;
-
-        public Cache(Context dbContext, IMemoryCache cache)
-        {
-            _dbContext = dbContext;
-            _cache = cache;
-        }
-
         public void CacheUserId()
         {
             int userID = Authentication.GetCachedUserId();
 
-            _cache.Set("cached_user_id", userID, TimeSpan.FromHours(10.0));
+            cache.Set("cached_user_id", userID, TimeSpan.FromHours(10.0));
         }
         public void DeleteCachedUserId()
         {
-            _cache.Remove("cached_user_id");
+            cache.Remove("cached_user_id");
         }
 
         public List<Category> GetDataFromDatabase()
         {
-            using (var context = new Context())
+            using var context = new Context();
+
+            int cachedId = GetCachedUserId();
+
+            if (cachedId != 0)
             {
-                int cachedUserId = _cache.Get<int>("cached_user_id");
-                if (cachedUserId != null)
-                {
-                    return context.Categories.Where(c => c.userid == cachedUserId)
-                        .Select(item => new Category { categoryid = item.categoryid, name = item.name })
-                        .ToList();
-                }
+                var categories = context.Categories
+                    .Where(c => c.userid == cachedId)
+                    .Select(item => new Category
+                    {
+                        categoryid = item.categoryid,
+                        name = item.name
+                    }).ToList();
+                return categories;
             }
-            return null;
+
+            return new List<Category>();
         }
 
         public int GetCachedUserId()
         {
-            return _cache.Get<int>("cached_user_id");
+            return cache.Get<int>("cached_user_id");
         }
     }
 }
