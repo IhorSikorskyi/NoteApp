@@ -114,7 +114,7 @@ public partial class MainWindow : Window
                     txtCategory1.Clear();
                 }
             }
-            
+
         }
     }
 
@@ -123,7 +123,7 @@ public partial class MainWindow : Window
         using (var context = new Context())
         {
             string categoryName = txtCategory1.Text;
-            
+
         }
     }
 

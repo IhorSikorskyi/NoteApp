@@ -23,7 +23,7 @@ public partial class Window1 : Window
     }
     public static bool IsValidEmail(string email) =>
         Regex.IsMatch(email, @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$");
-        
+
     public Window1()
     {
         InitializeComponent();
@@ -40,10 +40,10 @@ public partial class Window1 : Window
 
             if (!(string.IsNullOrEmpty(inputLog) && string.IsNullOrEmpty(inputPass)))
             {
-                    
+
                 var authentication = new Authentication(new Context());
 
-                bool isPasswordCorrect = authentication.AuthenticateUser(inputLog,inputPass);
+                bool isPasswordCorrect = authentication.AuthenticateUser(inputLog, inputPass);
                 var user = context.Users
                     .FirstOrDefault(u => u.login == inputLog && isPasswordCorrect);
 
@@ -54,7 +54,7 @@ public partial class Window1 : Window
 
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
-                    
+
                     Close();
                 }
                 else
