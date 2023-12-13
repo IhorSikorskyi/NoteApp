@@ -23,11 +23,9 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         services.AddMemoryCache();
-        services.AddScoped<Context>();  // Register your Context
-        services.AddScoped<Cache>();    // Register your Cache service
-
-        // Other service registrations...
-
+        services.AddScoped<Context>();
+        services.AddScoped<Cache>();
+        
         return services.BuildServiceProvider();
     }
 }
