@@ -112,18 +112,24 @@ public partial class MainWindow : Window
 
             txtTitle.Clear();
             txtMessage.Clear();
-
         }
     }
 
     private void read_Click(object sender, RoutedEventArgs e)
     {
+        using var context = new Context();
+        
         Note selectedNote = (Note)notesGrid.SelectedItem;
 
         if (selectedNote != null)
         {
-            txtTitle.Text = selectedNote.title;
-            txtMessage.Text = selectedNote.message;
+            Note noteFromDb = context.Notes.FirstOrDefault(n => n.noteid == selectedNote.noteid);
+            txtTitle.Text = noteFromDb.title;
+            txtMessage.Text = noteFromDb.message;
+
+            var categoriesList = new List<Category>(CategoriesForView);
+            int categoryIndex = categoriesList.FindIndex(c => c.categoryid == selectedNote.category_id);
+            comboCategory.SelectedIndex = categoryIndex;
         }
     }
 
@@ -168,10 +174,7 @@ public partial class MainWindow : Window
                 txtMessage.Text = foundNote.message;
 
                 var categoriesList = new List<Category>(CategoriesForView);
-
-
                 int categoryIndex = categoriesList.FindIndex(c => c.categoryid == foundNote.category_id);
-
                 comboCategory.SelectedIndex = categoryIndex;
             }
 
