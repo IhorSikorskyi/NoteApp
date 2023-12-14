@@ -1,13 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Threading;
-using Ecng.Collections;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using NoteApp;
+using StockSharp.Messages;
 
 namespace NoteAppWPF;
 
@@ -24,6 +21,7 @@ public partial class MainWindow : Window
     }
 
     public ObservableCollection<Category> CategoriesForView { get; set; }
+    public ObservableCollection<Note> NotesForView { get; set; }
 
     public MainWindow()
     {
@@ -47,26 +45,107 @@ public partial class MainWindow : Window
     {
         _cache.CacheUserId();
         CategoriesForView = new ObservableCollection<Category>(_cache.GetDataFromDatabase());
+        NotesForView = new ObservableCollection<Note>(_cache.GetDataFromNotes());
+        comboCategory.ItemsSource = new ObservableCollection<Category>(_cache.GetDataFromDatabase());
+        comboCategory.DisplayMemberPath = "name";
     }
 
-    private void save_Click(object sender, RoutedEventArgs e)
+    private void create_Click(object sender, RoutedEventArgs e)
     {
+        using var context = new Context();
+        var userId = _cache.GetCachedUserId();
 
-    }
+        string inputTitle = txtTitle.Text;
+        string inputMessage = txtMessage.Text;
 
-    private void read_Click(object sender, RoutedEventArgs e)
-    {
+        int selectedCategoryId = ((Category)comboCategory.SelectedItem).categoryid;
 
+        var newNote = new Note()
+        {
+            title = inputTitle,
+            message = inputMessage,
+            creationdate = DateTime.UtcNow,
+            category_id = selectedCategoryId, //заглушка
+            userid = userId
+        };
+
+        context.Notes.Add(newNote);
+        context.SaveChanges();
+
+        NotesForView.Clear();
+        foreach (var note in context.Notes.ToList())
+        {
+            NotesForView.Add(note);
+        }
+
+        txtTitle.Clear();
+        txtMessage.Clear();
     }
 
     private void update_Click(object sender, RoutedEventArgs e)
     {
+        using var context = new Context();
+        Note selectedNote = (Note)notesGrid.SelectedItem;
+        var userId = _cache.GetCachedUserId();
 
+        int selectedCategoryId = ((Category)comboCategory.SelectedItem).categoryid;
+
+        if (selectedNote != null)
+        {
+            string inputTitle = txtTitle.Text;
+            string inputMessage = txtMessage.Text;
+
+            selectedNote.title = inputTitle;
+            selectedNote.message = inputMessage;
+            selectedNote.creationdate = DateTime.UtcNow;
+            selectedNote.category_id = selectedCategoryId;
+            selectedNote.userid = userId;
+
+            context.Notes.Update(selectedNote);
+            context.SaveChanges();
+
+            NotesForView.Clear();
+            foreach (var note in context.Notes.ToList())
+            {
+                NotesForView.Add(note);
+            }
+
+            txtTitle.Clear();
+            txtMessage.Clear();
+
+        }
+    }
+
+    private void read_Click(object sender, RoutedEventArgs e)
+    {
+        Note selectedNote = (Note)notesGrid.SelectedItem;
+
+        if (selectedNote != null)
+        {
+            txtTitle.Text = selectedNote.title;
+            txtMessage.Text = selectedNote.message;
+        }
     }
 
     private void delete_Click(object sender, RoutedEventArgs e)
     {
+        using var context = new Context();
+        Note selectedNote = (Note)notesGrid.SelectedItem;
 
+        if (selectedNote != null)
+        {
+            context.Notes.Remove(selectedNote);
+            context.SaveChanges();
+
+            NotesForView.Clear();
+            foreach (var note in context.Notes.ToList())
+            {
+                NotesForView.Add(note);
+            }
+
+            txtTitle.Clear();
+            txtMessage.Clear();
+        }
     }
 
     private void clear_Click_1(object sender, RoutedEventArgs e)
@@ -77,7 +156,26 @@ public partial class MainWindow : Window
 
     private void toFind_Click(object sender, RoutedEventArgs e)
     {
+        using var context = new Context();
 
+        if (int.TryParse(txtSearch.Text, out int searchId))
+        {
+            var foundNote = context.Notes.FirstOrDefault(n => n.noteid == searchId);
+
+            if (foundNote != null)
+            {
+                txtTitle.Text = foundNote.title;
+                txtMessage.Text = foundNote.message;
+
+                var categoriesList = new List<Category>(CategoriesForView);
+
+
+                int categoryIndex = categoriesList.FindIndex(c => c.categoryid == foundNote.category_id);
+
+                comboCategory.SelectedIndex = categoryIndex;
+            }
+
+        }
     }
 
     private void Timer_Tick(object sender, EventArgs e)
@@ -88,11 +186,6 @@ public partial class MainWindow : Window
     private void UpdateClock()
     {
         txtClock.Text = DateTime.Now.ToString("HH:mm:ss");
-    }
-
-    private void dataGrid1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-
     }
 
     private void LogOut_Click(object sender, RoutedEventArgs e)
@@ -107,48 +200,92 @@ public partial class MainWindow : Window
         string categoryName = txtCategory1.Text;
         int currentUserId = _cache.GetCachedUserId();
 
-        var category = context.Categories.FirstOrDefault(c => c.name != categoryName);
-
-        if (category != null)
+        var newCategory = new Category
         {
-            var newCategory = new Category
-            {
-                name = categoryName,
-                userid = currentUserId
-            };
+            name = categoryName,
+            userid = currentUserId
+        };
 
-            context.Categories.Add(newCategory);
-            context.SaveChanges();
+        context.Categories.Add(newCategory);
+        context.SaveChanges();
 
-            txtCategory1.Clear();
+        CategoriesForView.Clear();
+        foreach (var cat in context.Categories.ToList())
+        {
+            CategoriesForView.Add(cat);
         }
+
+        RefreshComboBox();
+        txtCategory1.Clear();
     }
 
     private void catUpdate_Click(object sender, RoutedEventArgs e)
     {
+
         using var context = new Context();
-        string categoryName = txtCategory1.Text;
+
+        Category selectedCategory = (Category)dataGrid.SelectedItem;
+
+        if (selectedCategory != null)
+        {
+            string categoryName = txtCategory1.Text;
+
+            selectedCategory.name = categoryName;
+            selectedCategory.userid = _cache.GetCachedUserId();
+            
+            context.Categories.Update(selectedCategory);
+            context.SaveChanges();
+
+            CategoriesForView.Clear();
+            foreach (var cat in context.Categories.ToList())
+            {
+                CategoriesForView.Add(cat);
+            }
+
+            RefreshComboBox();
+            txtCategory1.Clear();
+        }
+        else
+        {
+            MessageBox.Show("Будь ласка, оберіть категорію з датагріда.");
+        }
+
     }
 
     private void catRead_Click(object sender, RoutedEventArgs e)
     {
-        using var context = new Context();
+        Category selectedCategory = (Category)dataGrid.SelectedItem;
+
+        if (selectedCategory != null)
+        {
+            txtCategory1.Text = selectedCategory.name;
+        }
     }
 
     private void catDelete_Click(object sender, RoutedEventArgs e)
     {
         using var context = new Context();
-        string categoryName = txtCategory1.Text;
-        var categoryToDelete = context.Categories
-            .FirstOrDefault(c => c.categoryid == 12);
-        if (categoryToDelete != null && categoryName != null)
+        Category selectedCategory = (Category)dataGrid.SelectedItem;
+
+        if (selectedCategory != null)
         {
-            context.Categories.Remove(categoryToDelete);
+            context.Categories.Remove(selectedCategory);
             context.SaveChanges();
+
+            CategoriesForView.Clear();
+            foreach (var cat in context.Categories.ToList())
+            {
+                CategoriesForView.Add(cat);
+            }
+
+            txtCategory1.Clear();
         }
-        else
-        {
-            MessageBox.Show("Такої категорії не існує!");
-        }
+    }
+
+    private void RefreshComboBox()
+    {
+        NotesForView = new ObservableCollection<Note>(_cache.GetDataFromNotes());
+        comboCategory.ItemsSource = new ObservableCollection<Category>(_cache.GetDataFromDatabase());
+        comboCategory.DisplayMemberPath = "name";
     }
 }

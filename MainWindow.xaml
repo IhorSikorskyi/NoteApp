@@ -18,17 +18,31 @@
                     <Label x:Name="message" Content="Message" HorizontalAlignment="Left" Margin="29,214,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
                     <TextBox x:Name="txtTitle" TextWrapping="Wrap" Margin="108,171,520,547" FontSize="15"/>
                     <TextBox x:Name="txtMessage" TextWrapping="Wrap" Margin="108,214,520,314" FontSize="15"/>
-                    <DataGrid x:Name="dataGrid1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="585,42,25,267" SelectionChanged="dataGrid1_SelectionChanged" FontSize="16"/>
-                    <Button x:Name="save" Content="Create" HorizontalAlignment="Left" Margin="108,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="save_Click"/>
+                    <Button x:Name="create" Content="Create" HorizontalAlignment="Left" Margin="108,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="create_Click"/>
                     <Button x:Name="read" Content="Read" HorizontalAlignment="Left" Margin="485,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="read_Click"/>
                     <Button x:Name="update" Content="Update" HorizontalAlignment="Left" Margin="585,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="update_Click"/>
-                    <Button x:Name="delete" Content="Delete" HorizontalAlignment="Left" Margin="980,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="delete_Click"/>
+                    <Button x:Name="delete" Content="Delete" HorizontalAlignment="Left" Margin="995,512,0,0" VerticalAlignment="Top" Height="31" Width="79" FontSize="16" Click="delete_Click" RenderTransformOrigin="0.74,0.351"/>
                     <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="293,512,0,0" VerticalAlignment="Top" Height="31" Width="86" FontSize="16" Click="clear_Click_1"/>
                     <Label x:Name="txtCategory" Content="Category" HorizontalAlignment="Left" Margin="29,451,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
-                    <TextBox x:Name="txtTitle_Copy" TextWrapping="Wrap" Margin="108,451,520,267" FontSize="15"/>
                     <Label x:Name="title_toFind" Content="Input note's number:" HorizontalAlignment="Left" Margin="29,42,0,0" VerticalAlignment="Top" Height="31" Width="158" FontSize="16" RenderTransformOrigin="0.497,0.555" Background="White"/>
-                    <TextBox x:Name="txtTitle_Copy1" TextWrapping="Wrap" Margin="192,42,520,676" FontSize="15"/>
+                    <TextBox x:Name="txtSearch" TextWrapping="Wrap" Margin="192,42,520,676" FontSize="15"/>
                     <Button x:Name="toFind" Content="Find" HorizontalAlignment="Left" Height="32" Margin="104,90,0,0" VerticalAlignment="Top" Width="83" Click="toFind_Click"/>
+                    <DataGrid x:Name="notesGrid" ItemsSource="{Binding NotesForView}" Margin="585,42,10,267">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding noteid}" Width="50" />
+                            <DataGridTextColumn Header="Title" Binding="{Binding title}" Width ="175"/>
+                            <DataGridTextColumn Header="Creation date" Binding="{Binding creationdate}" Width="140"/>
+                            <DataGridTextColumn Header="Category Id" Binding="{Binding category_id}" Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <ComboBox x:Name="comboCategory" HorizontalAlignment="Left" Margin="108,451,0,0" VerticalAlignment="Top" Width="456">
+                        <ComboBox.Background>
+                            <LinearGradientBrush EndPoint="0,1">
+                                <GradientStop Color="#FFF0F0F0"/>
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBox.Background>
+                    </ComboBox>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Categories" Header="Categories" Margin="20,-2,-19,0" FontSize="18">
@@ -43,7 +57,7 @@
                     <Button x:Name="catRead" Content="Read" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catRead_Click"/>
                     <Button x:Name="catUpdate" Content="Update" HorizontalAlignment="Left" Margin="10,167,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catUpdate_Click"/>
                     <Button x:Name="catDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top" Height="36" Width="146" Click="catDelete_Click"/>
-                    <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="422" Margin="200,115,0,0" VerticalAlignment="Top" Width="523" ItemsSource="{Binding CategoriesForView}">
+                    <DataGrid x:Name="dataGrid" Margin="200,115,361,97" ItemsSource="{Binding CategoriesForView}" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding categoryid}" Width="50" />
                             <DataGridTextColumn Header="Name" Binding="{Binding name}" Width ="470"/>
