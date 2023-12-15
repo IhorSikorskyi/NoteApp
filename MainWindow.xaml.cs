@@ -49,7 +49,6 @@ public partial class MainWindow : Window
         comboCategory.ItemsSource = new ObservableCollection<Category>(_cache.GetDataFromDatabase());
         comboCategory.DisplayMemberPath = "name";
     }
-
     private void create_Click(object sender, RoutedEventArgs e)
     {
         using var context = new Context();
@@ -272,6 +271,11 @@ public partial class MainWindow : Window
 
         if (selectedCategory != null)
         {
+            //
+            {
+                var relatedNotes = context.Notes.Where(n => n.category_id == selectedCategory.categoryid).ToList();
+                context.Notes.RemoveRange(relatedNotes);
+            }
             context.Categories.Remove(selectedCategory);
             context.SaveChanges();
 
