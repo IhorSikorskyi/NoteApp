@@ -16,7 +16,10 @@ namespace NoteApp
         {
             cache.Remove("cached_user_id");
         }
-
+        public int GetCachedUserId()
+        {
+            return cache.Get<int>("cached_user_id");
+        }
         public List<Category> GetDataFromDatabase()
         {
             using var context = new Context();
@@ -61,9 +64,5 @@ namespace NoteApp
             return new List<Note>();
         }
 
-        public int GetCachedUserId()
-        {
-            return cache.Get<int>("cached_user_id");
-        }
     }
 }

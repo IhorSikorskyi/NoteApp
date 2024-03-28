@@ -64,7 +64,7 @@ public partial class MainWindow : Window
             title = inputTitle,
             message = inputMessage,
             creationdate = DateTime.UtcNow,
-            category_id = selectedCategoryId, //заглушка
+            category_id = selectedCategoryId, 
             userid = userId
         };
 
